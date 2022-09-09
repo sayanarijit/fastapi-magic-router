@@ -1,6 +1,6 @@
-# FastAPI Magic Router
+# 🪄 FastAPI Magic Router ✨
 
-Have you come here seeking magical powers to define FastAPI routes the following way?
+Have you come here seeking a magical way to define FastAPI routes?
 
 ```python
 app = FastAPI()
