@@ -21,8 +21,8 @@ class Magic:
 
 @dataclass
 class NoMagic:
-    """Add this object to <endpoint>.magic attribute to manually pass arguments to the
-    route."""
+    """Add this object to <endpoint>.nomagic attribute to manually pass arguments to
+    the route."""
 
     tags: list[str | Enum] | None = None
     name: str | None = None
