@@ -48,7 +48,7 @@ def nomagic(
     name: str | None = None,
     operation_id: str | None = None,
     response_model: Any = None,
-    fastapi_kwargs: dict[str, Any] | None = None,
+    **kwargs: Any,
 ):
     """Decorator to manually set the endpoint attributes."""
 
@@ -58,7 +58,7 @@ def nomagic(
             name=name,
             operation_id=operation_id,
             response_model=response_model,
-            fastapi_kwargs=fastapi_kwargs,
+            fastapi_kwargs=kwargs,
         )
         return endpoint
 
@@ -97,7 +97,7 @@ def magic_router(app: FastAPI):
             ),
             operation_id=nomagic.operation_id or endpoint.__name__,
             tags=nomagic.tags or [endpoint.__module__.split(".")[-1]],
-            **kwargs
+            **kwargs,
         )
 
     return route
