@@ -2,9 +2,11 @@ __version__ = "0.1.0"
 
 
 from dataclasses import dataclass
-from fastapi import FastAPI
-from typing import Any, Callable
 from enum import Enum
+from inspect import signature
+from typing import Any, Callable
+
+from fastapi import FastAPI
 
 
 @dataclass
@@ -41,6 +43,28 @@ def magic(endpoint: Callable[..., Any]) -> Magic:
     return endpoint.magic
 
 
+def nomagic(
+    tags: list[str | Enum] | None = None,
+    name: str | None = None,
+    operation_id: str | None = None,
+    response_model: Any = None,
+    fastapi_kwargs: dict[str, Any] | None = None,
+):
+    """Decorator to manually set the endpoint attributes."""
+
+    def decorator(endpoint: Callable[..., Any]):
+        endpoint.nomagic = NoMagic(
+            tags=tags,
+            name=name,
+            operation_id=operation_id,
+            response_model=response_model,
+            fastapi_kwargs=fastapi_kwargs,
+        )
+        return endpoint
+
+    return decorator
+
+
 def magic_router(app: FastAPI):
     """Give it a FastAPI object and it will give you a function with magical powers.
 
@@ -68,7 +92,9 @@ def magic_router(app: FastAPI):
             endpoint,
             name=nomagic.name or endpoint.__name__,
             methods=[method],
-            response_model=nomagic.response_model,
+            response_model=(
+                nomagic.response_model or signature(endpoint).return_annotation
+            ),
             operation_id=nomagic.operation_id or endpoint.__name__,
             tags=nomagic.tags or [endpoint.__module__.split(".")[-1]],
             **kwargs

@@ -1,6 +1,7 @@
-from magic_router import NoMagic, magic_router, magic
 from fastapi import FastAPI
 from pydantic import BaseModel
+
+from magic_router import magic, magic_router
 
 
 class Response(BaseModel):
@@ -33,11 +34,8 @@ app.get(
 route = magic_router(app)
 
 
-async def magical_endpoint():
+async def magical_endpoint() -> Response:
     return Response(path=magic(magical_endpoint).path)
-
-
-magical_endpoint.nomagic = NoMagic(response_model=Response)
 
 
 route("GET /api/magical", magical_endpoint)
