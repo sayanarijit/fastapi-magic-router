@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 from dataclasses import dataclass
@@ -80,24 +80,33 @@ def magic_router(app: FastAPI):
 
     """
 
-    def route(location: str, endpoint: Callable[..., Any]):
+    def route(location: str, endpoint: Callable[..., Any], **kwargs: Any):
         """Format: `route("METHOD   /path", endpoint)."""
 
         method, path = location.split()
         endpoint.magic = Magic(path=path, method=method)
         nomagic: NoMagic = getattr(endpoint, "nomagic", _defaults)
-        kwargs = nomagic.fastapi_kwargs or {}
+        _kwargs = nomagic.fastapi_kwargs or {}
+        _kwargs.update(kwargs)
         app.add_api_route(
             path,
             endpoint,
-            name=nomagic.name or endpoint.__name__,
+            name=(kwargs.get("name") or nomagic.name or endpoint.__name__),
             methods=[method],
             response_model=(
-                nomagic.response_model or signature(endpoint).return_annotation
+                kwargs.get("response_model")
+                or nomagic.response_model
+                or signature(endpoint).return_annotation
             ),
-            operation_id=nomagic.operation_id or endpoint.__name__,
-            tags=nomagic.tags or [endpoint.__module__.split(".")[-1]],
-            **kwargs,
+            operation_id=(
+                kwargs.get("operation_id") or nomagic.operation_id or endpoint.__name__
+            ),
+            tags=(
+                kwargs.get("tags")
+                or nomagic.tags
+                or [endpoint.__module__.split(".")[-1]]
+            ),
+            **_kwargs,
         )
 
     return route
