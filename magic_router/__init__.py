@@ -91,19 +91,17 @@ def magic_router(app: FastAPI):
         app.add_api_route(
             path,
             endpoint,
-            name=(kwargs.get("name") or nomagic.name or endpoint.__name__),
+            name=(_kwargs.pop("name", nomagic.name) or endpoint.__name__),
             methods=[method],
             response_model=(
-                kwargs.get("response_model")
-                or nomagic.response_model
+                _kwargs.pop("response_model", nomagic.response_model)
                 or signature(endpoint).return_annotation
             ),
             operation_id=(
-                kwargs.get("operation_id") or nomagic.operation_id or endpoint.__name__
+                _kwargs.pop("operation_id", nomagic.operation_id) or endpoint.__name__
             ),
             tags=(
-                kwargs.get("tags")
-                or nomagic.tags
+                _kwargs.pop("tags", nomagic.tags)
                 or [endpoint.__module__.split(".")[-1]]
             ),
             **_kwargs,
