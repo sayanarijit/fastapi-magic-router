@@ -39,3 +39,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.version]
 path = "./magic_router/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["magic_router"]

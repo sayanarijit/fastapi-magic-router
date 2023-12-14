@@ -6,11 +6,11 @@ Have you come here seeking a magical way to define FastAPI routes?
 app = FastAPI()
 route = magic_router(app)
 
-route("GET     /api/users          ", list_users)
-route("GET     /api/users/{user_id}", get_user)
-route("POST    /api/users          ", create_user)
-route("PATCH   /api/users/{user_id}", update_user)
-route("DELETE  /api/users/{user_id}", delete_user)
+route("GET     /api/users          ", user.list_)
+route("GET     /api/users/{user_id}", user.get)
+route("POST    /api/users          ", user.create)
+route("PATCH   /api/users/{user_id}", user.update)
+route("DELETE  /api/users/{user_id}", user.delete_)
 ```
 
 Come, I shall grant you your wish!
